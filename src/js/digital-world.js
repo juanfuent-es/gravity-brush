@@ -3,12 +3,12 @@ import decomp from "poly-decomp"; // Importar poly-decomp
 
 export default class DigitalWorld {
     constructor() {
-        // Configurar poly-decomp como descompositor global
-        window.decomp = decomp;
-
+        Matter.Common.setDecomp(decomp);
         // Crear el motor y el mundo de Matter.js
         this.engine = Matter.Engine.create();
         this.world = this.engine.world;
+        this.bodies = []; // Lista de cuerpos rígidos
+        this.ground = null; // Suelo del mundo físico
 
         // Configurar el renderizador (opcional)
         this.render = Matter.Render.create({
@@ -22,8 +22,11 @@ export default class DigitalWorld {
         });
 
         // Iniciar el motor y el renderizador
-        Matter.Engine.run(this.engine);
+        Matter.Runner.run(this.engine);
         Matter.Render.run(this.render);
+
+        // Crear el suelo
+        this.adjustGround();
 
         // Escuchar el evento 'finishShape' para añadir figuras al mundo físico
         this.setupEvents();
@@ -32,44 +35,53 @@ export default class DigitalWorld {
     setupEvents() {
         window.addEventListener("finishShape", (event) => {
             const shape = event.detail.shape;
+            console.log("Evento 'finishShape' recibido:", shape);
             if (shape) {
-                this.addShape(shape.points);
+                this.createBody(shape.points);
             }
         });
+    }
+
+    /**
+     * Crea o actualiza un cuerpo rígido estático que actúa como el suelo.
+     */
+    adjustGround() {
+        if (this.ground) {
+            Matter.World.remove(this.world, this.ground);
+        }
+        // Crear un nuevo suelo con las dimensiones actuales del canvas
+        this.ground = Matter.Bodies.rectangle(
+            window.innerWidth / 2, // Posición X (centro del canvas)
+            window.innerHeight, // Posición Y (parte inferior del canvas)
+            window.innerWidth, // Ancho del suelo (100% del canvas)
+            10, // Altura del suelo
+            {
+                isStatic: true, // El cuerpo no se mueve
+            }
+        );
+        Matter.World.add(this.world, this.ground);
     }
 
     /**
      * Añade un nuevo cuerpo al mundo físico a partir de vértices.
      * @param {Array} vertices - Lista de vértices [{x, y}, {x, y}, ...].
      */
-    addShape(vertices) {
-        console.log("Añadiendo forma al mundo físico:", vertices);
-
+    createBody(vertices) {
         // Calcular el centroide de los vértices
         const centroid = this.calculateCentroid(vertices);
-
-        // Ajustar los vértices para que estén relativos al centroide
-        const adjustedVertices = vertices.map((vertex) => ({
-            x: vertex.x - centroid.x,
-            y: vertex.y - centroid.y,
-        }));
-
-        // Crear el cuerpo en la posición del centroide
-        const body = Matter.Bodies.fromVertices(
-            centroid.x, // Posición inicial en X
-            centroid.y, // Posición inicial en Y
-            adjustedVertices,
+        let body = Matter.Bodies.fromVertices(
+            centroid.x, centroid.y,
+            vertices,
             {
                 isStatic: false, // El cuerpo puede moverse
                 restitution: 0.5, // Elasticidad
                 friction: 0.5, // Fricción
             }
         );
-
         if (body) {
-            Matter.World.add(this.world, body); // Agregar el cuerpo al mundo
-        } else {
-            console.error("No se pudo crear el cuerpo a partir de los vértices.");
+            // Agregar el cuerpo al mundo
+            Matter.World.add(this.world, body);
+            this.bodies.push(body); // Guardar el cuerpo para sincronizarlo con p5.js
         }
     }
 
@@ -80,14 +92,12 @@ export default class DigitalWorld {
      */
     calculateCentroid(vertices) {
         const sum = vertices.reduce(
-            (acc, vertex) => {
-                acc.x += vertex.x;
-                acc.y += vertex.y;
-                return acc;
-            },
-            { x: 0, y: 0 }
+            (pos, vertex) => {
+                pos.x += vertex.x;
+                pos.y += vertex.y;
+                return pos;
+            }, { x: 0, y: 0 }
         );
-
         return {
             x: sum.x / vertices.length,
             y: sum.y / vertices.length,

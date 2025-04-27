@@ -9,8 +9,7 @@ window.setup = (event) => createCanvas(windowWidth, windowHeight);
 // Redimensionar el canvas y el renderizador de Matter.js
 window.windowResized = (event) => {
     resizeCanvas(windowWidth, windowHeight);
-    world.render.canvas.width = windowWidth;
-    world.render.canvas.height = windowHeight;
+    world.adjustGround(); // Crear el suelo nuevamente
 };
 
 // Dibujar en cada frame
