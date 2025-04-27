@@ -1,7 +1,7 @@
 import Pencil from "./js/pencil.js";
 import DigitalWorld from "./js/digital-world.js";
 
-const magic_pencil = new Pencil();
+const magic_crayon = new Pencil();
 const world = new DigitalWorld();
 
 window.setup = (event) => createCanvas(windowWidth, windowHeight);
@@ -14,6 +14,7 @@ window.windowResized = (event) => {
 
 // Dibujar en cada frame
 window.draw = (event) => {
-    magic_pencil.draw();
+    background(0); // Limpiar el canvas
     world.update(); // Actualizar el motor de Matter.js
+    magic_crayon.draw(world.bodies); // Dibujar los trazos
 };

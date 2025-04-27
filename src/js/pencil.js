@@ -79,14 +79,35 @@ export default class Pencil {
         window.dispatchEvent(event);
     }
 
+    /**
+     * Actualiza las posiciones de los shapes con base en los cuerpos de Matter.js.
+     * @param {Array} bodies - Lista de cuerpos de Matter.js.
+     */
+    updateShapesFromBodies(bodies) {
+        this.shapes.forEach((shape, index) => {
+            const body = bodies[index];
+            if (body) {
+                // Actualizar los puntos del Shape con las posiciones de los vértices del cuerpo
+                shape.points = body.vertices.map((vertex) => ({
+                    x: vertex.x,
+                    y: vertex.y,
+                }));
+            }
+        });
+    }
+
     /* Borra todos los trazos. */
     erase() {
         this.shapes = [];
     }
 
-    /* Dibuja todos los trazos en el canvas */
-    draw() {
-        this.shapes.forEach((shape) => shape.draw());
+    /**
+     * Dibuja todos los trazos en el canvas.
+     * @param {Array} bodies - Lista de cuerpos de Matter.js.
+     */
+    draw(bodies) {
+        this.updateShapesFromBodies(bodies); // Sincronizar shapes con Matter.js
+        this.shapes.forEach((shape) => shape.draw()); // Dibujar los shapes
     }
 
     /**

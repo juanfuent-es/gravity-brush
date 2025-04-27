@@ -33,10 +33,7 @@ export default class DigitalWorld {
     setupEvents() {
         window.addEventListener("finishShape", (event) => {
             const shape = event.detail.shape;
-            console.log("Evento 'finishShape' recibido:", shape);
-            if (shape) {
-                this.createBody(shape.points);
-            }
+            if (shape) return this.createBody(shape.points);
         });
     }
 
@@ -45,9 +42,8 @@ export default class DigitalWorld {
         this.render.options.height = window.innerHeight;
         this.adjustGround();
     }
-    /**
-     * Crea o actualiza un cuerpo rígido estático que actúa como el suelo.
-     */
+
+    /* Crea o actualiza un cuerpo rígido estático que actúa como el suelo. */
     adjustGround() {
         if (this.ground) {
             Matter.World.remove(this.world, this.ground);

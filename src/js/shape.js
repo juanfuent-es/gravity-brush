@@ -16,10 +16,11 @@ export default class Shape {
     }
 
     draw() {
-        fill('gray');
+        // fill('gray');
+        noFill();
         stroke('white');
         beginShape();
         this.points.forEach((point) => vertex(point.x, point.y));
-        endShape();
+        endShape(CLOSE);
     }
 }
