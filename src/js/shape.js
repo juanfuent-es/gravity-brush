@@ -3,6 +3,7 @@ import { simplifyPath } from "./simplify-helper.js"; // Importa la función de s
 export default class Shape {
     constructor() {
         this.points = []; // Lista de puntos del trazo
+        this.strokeColor = 'white';
         this.fillColor = 'red';
     }
 
@@ -15,8 +16,8 @@ export default class Shape {
     }
 
     draw() {
-        fill(this.fillColor);
-        noStroke();
+        noFill();
+        stroke('white');
 
         beginShape();
         this.points.forEach((point) => vertex(point.x, point.y));

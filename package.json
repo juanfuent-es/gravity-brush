@@ -19,6 +19,7 @@
     "@tailwindcss/vite": "^4.1.4",
     "gsap": "^3.12.7",
     "matter-js": "^0.20.0",
+    "poly-decomp": "^0.3.0",
     "tailwindcss": "^4.1.4"
   }
 }

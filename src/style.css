@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@layer base {
+  canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+.p5Canvas {
+    z-index: 1;
+}

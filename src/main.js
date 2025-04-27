@@ -1,13 +1,20 @@
-import Brush from "./js/brush";
+import Pencil from "./js/pencil.js";
+import DigitalWorld from "./js/digital-world.js";
 
-const magic_crayon = new Brush()
+const magic_pencil = new Pencil();
+const world = new DigitalWorld();
 
 window.setup = (event) => createCanvas(windowWidth, windowHeight);
-// Definición de eventos en una sóla línea
-window.windowResized = (event) => resizeCanvas(windowWidth, windowHeight);
-// RAF: Request Animation Frame
-// https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+
+// Redimensionar el canvas y el renderizador de Matter.js
+window.windowResized = (event) => {
+    resizeCanvas(windowWidth, windowHeight);
+    world.render.canvas.width = windowWidth;
+    world.render.canvas.height = windowHeight;
+};
+
+// Dibujar en cada frame
 window.draw = (event) => {
-    background(255);
-    magic_crayon.draw();
+    magic_pencil.draw();
+    world.update(); // Actualizar el motor de Matter.js
 };
