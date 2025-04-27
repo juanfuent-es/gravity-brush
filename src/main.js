@@ -1,6 +1,6 @@
-import Crayon from "./crayon.js";
+import Brush from "./js/brush";
 
-const crayon = new Crayon()
+const magic_crayon = new Brush()
 
 window.setup = (event) => createCanvas(windowWidth, windowHeight);
 // Definición de eventos en una sóla línea
@@ -9,5 +9,5 @@ window.windowResized = (event) => resizeCanvas(windowWidth, windowHeight);
 // https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
 window.draw = (event) => {
     background(255);
-    crayon.draw();
+    magic_crayon.draw();
 };
