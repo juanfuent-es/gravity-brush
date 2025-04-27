@@ -25,9 +25,7 @@ export default class DigitalWorld {
         Matter.Runner.run(this.engine);
         Matter.Render.run(this.render);
 
-        // Crear el suelo
         this.adjustGround();
-
         // Escuchar el evento 'finishShape' para añadir figuras al mundo físico
         this.setupEvents();
     }
@@ -42,6 +40,11 @@ export default class DigitalWorld {
         });
     }
 
+    resize() {
+        this.render.options.width = window.innerWidth;
+        this.render.options.height = window.innerHeight;
+        this.adjustGround();
+    }
     /**
      * Crea o actualiza un cuerpo rígido estático que actúa como el suelo.
      */
