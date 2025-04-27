@@ -43,7 +43,7 @@ export default class Pencil {
         if (this.active_shape && !this.isShapeValid(this.active_shape)) {
             return this.discardShape();
         }
-        this.active_shape.simplify(); // Simplifica el trazo al finalizar
+        this.active_shape.simplify(2); // Simplifica el trazo al finalizar
         // Disparar el evento personalizado 'finishShape' para crear un 'body' en matter
         this.dispatchFinishShapeEvent(this.active_shape);
         // Resetear el Shape activo
@@ -106,8 +106,9 @@ export default class Pencil {
      * @param {Array} bodies - Lista de cuerpos de Matter.js.
      */
     draw(bodies) {
+        const time = window.millis() / 10000; // Obtener el tiempo actual
         this.updateShapesFromBodies(bodies); // Sincronizar shapes con Matter.js
-        this.shapes.forEach((shape) => shape.draw()); // Dibujar los shapes
+        this.shapes.forEach((shape, i) => shape.draw(time + i)); // Dibujar los shapes
     }
 
     /**

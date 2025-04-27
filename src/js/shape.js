@@ -15,12 +15,11 @@ export default class Shape {
         this.points = simplifyPath(this.points, epsilon); // Simplifica los puntos
     }
 
-    draw() {
-        // fill('gray');
+    draw(t) {
         noFill();
         stroke('white');
         beginShape();
-        this.points.forEach((point) => vertex(point.x, point.y));
+        this.points.forEach(p => vertex(p.x, p.y));
         endShape(CLOSE);
     }
 }

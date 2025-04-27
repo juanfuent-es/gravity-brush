@@ -45,20 +45,20 @@ export default class DigitalWorld {
 
     /* Crea o actualiza un cuerpo rígido estático que actúa como el suelo. */
     adjustGround() {
-        if (this.ground) {
-            Matter.World.remove(this.world, this.ground);
+        if (!this.ground) {
+            this.ground = Matter.Bodies.rectangle(1, 1, 1, 1, { isStatic: true });
+            Matter.World.add(this.world, this.ground);
         }
-        // Crear un nuevo suelo con las dimensiones actuales del canvas
-        this.ground = Matter.Bodies.rectangle(
-            window.innerWidth / 2, // Posición X (centro del canvas)
-            window.innerHeight, // Posición Y (parte inferior del canvas)
-            window.innerWidth, // Ancho del suelo (100% del canvas)
-            10, // Altura del suelo
-            {
-                isStatic: true, // El cuerpo no se mueve
-            }
-        );
-        Matter.World.add(this.world, this.ground);
+        Matter.Body.setPosition(this.ground, {
+            x: window.innerWidth / 2,
+            y: window.innerHeight,
+        });
+        Matter.Body.setVertices(this.ground, [
+            { x: 0, y: 0 },
+            { x: window.innerWidth, y: 0 },
+            { x: window.innerWidth, y: 10 },
+            { x: 0, y: 10 },
+        ]);
     }
 
     /**
@@ -66,22 +66,57 @@ export default class DigitalWorld {
      * @param {Array} vertices - Lista de vértices [{x, y}, {x, y}, ...].
      */
     createBody(vertices) {
+        console.log("Añadiendo forma al mundo físico:", vertices);
         // Calcular el centroide de los vértices
         const centroid = this.calculateCentroid(vertices);
+        // Calcular el área del cuerpo
+        const area = this.calculatePolygonArea(vertices);
+        // Ajustar propiedades físicas según el área
+        const density = 2 * area; // Densidad proporcional al área
+        const restitution = Math.max(0.1, 1 - area / 10000); // Menor restitución para áreas grandes
+        const friction = Math.min(1, 0.1 + area / 5000); // Mayor fricción para áreas grandes
+
+        // Crear el cuerpo en la posición del centroide
         let body = Matter.Bodies.fromVertices(
-            centroid.x, centroid.y,
+            centroid.x, // Posición inicial en X
+            centroid.y, // Posición inicial en Y
             vertices,
             {
-                isStatic: false, // El cuerpo puede moverse
-                restitution: 0.5, // Elasticidad
-                friction: 0.5, // Fricción
+                density: density, // Densidad proporcional al área
+                restitution: restitution, // Elasticidad ajustada
+                friction: friction, // Fricción ajustada
             }
         );
+
         if (body) {
+            console.log("Propiedades físicas asignadas:", {
+                density,
+                restitution,
+                friction,
+            });
+
             // Agregar el cuerpo al mundo
             Matter.World.add(this.world, body);
             this.bodies.push(body); // Guardar el cuerpo para sincronizarlo con p5.js
         }
+    }
+
+     /**
+     * Calcula el área de un polígono dado sus vértices.
+     * @param {Array} vertices - Lista de vértices [{x, y}, {x, y}, ...].
+     * @returns {number} - Área del polígono.
+     */
+     calculatePolygonArea(vertices) {
+        let area = 0;
+        const n = vertices.length;
+
+        for (let i = 0; i < n; i++) {
+            const current = vertices[i];
+            const next = vertices[(i + 1) % n]; // El siguiente vértice (circular)
+            area += current.x * next.y - next.x * current.y;
+        }
+
+        return Math.abs(area / 2); // Retornar el área absoluta
     }
 
     /**
