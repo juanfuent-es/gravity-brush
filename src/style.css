@@ -1,6 +1,21 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Universal Typeface';
+  src: url('/universal-typeface.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@theme {
+  --font-title: "Universal Typeface", cursive;
+  --font-family: "Coming Soon", cursive;
+}
+
 @layer base {
+  label, button {
+    cursor: pointer;
+  }
   canvas {
     position: absolute;
     left: 0;
@@ -8,6 +23,12 @@
   }
 }
 
+@layer utilities {
+  .control-btn {
+    @apply p-0 w-8 h-8 leading-none border-2 border-black hover:bg-black hover:text-white focus:ring-2 focus:outline-none focus:ring-black font-extrabold transition-colors duration-300 flex items-center justify-center
+  }
+}
+
 .p5Canvas {
-    z-index: 1;
+  z-index: 1;
 }

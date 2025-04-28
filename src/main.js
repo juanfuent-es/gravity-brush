@@ -14,7 +14,7 @@ window.windowResized = (event) => {
 
 // Dibujar en cada frame
 window.draw = (event) => {
-    background(0); // Limpiar el canvas
+    background(255); // Limpiar el canvas
     world.update(); // Actualizar el motor de Matter.js
     magic_crayon.draw(world.bodies); // Dibujar los trazos
 };

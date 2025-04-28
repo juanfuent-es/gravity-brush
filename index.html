@@ -1,25 +1,59 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-    <link rel="stylesheet" href="/src/style.css" />
-    <title>Gravity Brush</title>
-  </head>
-  <body class="overflow-x-hidden">
-    <main id="app" class="w-full h-screen flex flex-col items-center justify-center">
-      <menu class="absolute bottom-0 left-0 flex gap-2 p-4 bg-white rounded-t-lg shadow-lg">
-        <button id="redo-btn">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gravity Brush</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+
+<body class="overflow-x-hidden font-family text-black">
+  <main>
+    <section id="intro"
+      class="fixed left-0 top-0 w-screen h-screen z-50 text-center flex items-center justify-center hidden">
+      <article class="max-w-2xl flex gap-4 flex-col items-center">
+        <header>
+          <h1 class="font-title text-5xl font-black">Draw & Drop!</h1>
+          <p class="text-xl">Sketch it, drop it, play with physics!</p>
+        </header>
+        <p>Un tablero de dibujo mágico hecho con p5.js: dibuja formas, suéltalas y arrástralas en pantalla, y mira cómo
+          cobran vida bajo las reglas de la física con Matter.js.</p>
+        <button id="start-btn" class="">Draw with physics!</button>
+      </article>
+    </section>
+    <section id="controls" class="fixed left-0 bottom-0 w-full flex justify-between p-4 z-40">
+      <menu class="w-full flex gap-2">
+        <label title="Control de Gravedad" class="control-btn relative" for="gravity-range">
+          <input type="range" id="gravity-range" min="0" max="10" step="0.1" value="1"
+            class="absolute left-0 -top-10 cursor-pointer rotate-270 origin-center -translate-x-6 -translate-y-full text-2xl w-20" />
+          <i class="fa-solid fa-temperature-half"></i>
+        </label>
+        <label title="Seleccionar Color" class="control-btn relative" for="color-picker">
+          <input type="color" id="color-picker" value="#000000"
+            class="absolute left-0 top-0 w-full h-full opacity-0 cursor-pointer" />
+          <i class="fa-solid fa-fill-drip"></i>
+        </label>
+        <button id="undo-btn" title="Deshacer" class="control-btn">
+          <i class="fa-solid fa-rotate-left"></i>
+        </button>
+        <button id="redo-btn" title="Repetir" class="control-btn">
           <i class="fa-solid fa-rotate-right"></i>
         </button>
-        <button id="erase-btn">
-          <i class="fa-solid fa-eraser"></i>
+        <button id="erase-btn" title="Borrar" class="control-btn">
+          <i class="fa-solid fa-broom"></i>
         </button>
       </menu>
-    </main>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.min.js"></script>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+      <button id="save-svg-btn" title="Guardar SVG" class="control-btn">
+        <i class="fa-solid fa-file-export"></i>
+      </button>
+    </section>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.3/p5.min.js"></script>
+  <script type="module" src="/src/main.js"></script>
+</body>
 </html>
