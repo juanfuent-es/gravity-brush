@@ -4,8 +4,10 @@ export default class Pencil {
     constructor() {
         this.shapes = []; // Lista de trazos (Shape)
         this.active_shape = null; // Trazo activo
+        this.fillColor = "#000000"; // Color de relleno por defecto
         this.redoBtn = document.getElementById("redo-btn");
         this.eraseBtn = document.getElementById("erase-btn");
+        this.colorInput = document.getElementById("color-input"); // Input de color
 
         this.events();
     }
@@ -20,11 +22,18 @@ export default class Pencil {
         // Eventos personalizados
         this.redoBtn.addEventListener("click", () => this.redo());
         this.eraseBtn.addEventListener("click", () => this.erase());
+
+        // Evento para cambiar el color de relleno
+        this.colorInput.addEventListener("change", (event) => {
+            this.fillColor = event.target.value; // Actualizar el color de relleno
+            console.log("Nuevo color de relleno:", this.fillColor);
+        });
     }
 
     /* Inicia un nuevo trazo. */
     startShape() {
         this.active_shape = new Shape();
+        this.active_shape.fillColor = this.fillColor; // Asignar el color actual al nuevo shape
         this.shapes.push(this.active_shape);
     }
 

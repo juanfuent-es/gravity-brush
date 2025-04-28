@@ -26,7 +26,7 @@ export default class DigitalWorld {
         Matter.Render.run(this.render);
 
         this.adjustGround();
-        // Escuchar el evento 'finishShape' para añadir figuras al mundo físico
+        // Escuchar eventos
         this.setupEvents();
     }
 
@@ -35,6 +35,22 @@ export default class DigitalWorld {
             const shape = event.detail.shape;
             if (shape) return this.createBody(shape.points);
         });
+
+        // Escuchar el evento de cambio de gravedad
+        const gravityInput = document.querySelector("#gravity-input");
+        if (gravityInput) {
+            gravityInput.addEventListener("input", (event) => this.changeGravity(event.target.value));
+        }
+    }
+
+    /**
+     * Cambia la gravedad del mundo de Matter.js.
+     * @param {number} value - Nuevo valor de gravedad.
+     */
+    changeGravity(value) {
+        const gravityValue = parseFloat(value);
+        this.engine.world.gravity.y = gravityValue;
+        console.log("Gravedad actualizada a:", gravityValue);
     }
 
     resize() {
@@ -101,12 +117,12 @@ export default class DigitalWorld {
         }
     }
 
-     /**
+    /**
      * Calcula el área de un polígono dado sus vértices.
      * @param {Array} vertices - Lista de vértices [{x, y}, {x, y}, ...].
      * @returns {number} - Área del polígono.
      */
-     calculatePolygonArea(vertices) {
+    calculatePolygonArea(vertices) {
         let area = 0;
         const n = vertices.length;
 
